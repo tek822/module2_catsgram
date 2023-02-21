@@ -3,14 +3,17 @@ package ru.yandex.practicum.catsgram.service;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
     private final List<Post> posts = new ArrayList<>();
+    private static int nextId = 0;
     private final UserService userService;
 
     public PostService(UserService userService) {
@@ -29,7 +32,19 @@ public class PostService {
         if (userService.findUserByEmail(email) == null){
             throw new UserNotFoundException("Пользователь " + email + " не найден");
         }
+        post.setId(nextId++);
         posts.add(post);
         return post;
+    }
+
+    public Post findById(Integer id) {
+        Optional<Post> found  = posts.stream()
+                .filter(p->p.getId().equals(id))
+                .findFirst();
+        if (found.isPresent()) {
+            return found.get();
+        } else {
+            throw new PostNotFoundException(String.format("Пост № %d не найден", id));
+        }
     }
 }

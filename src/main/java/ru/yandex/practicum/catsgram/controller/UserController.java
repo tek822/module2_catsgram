@@ -2,12 +2,9 @@ package ru.yandex.practicum.catsgram.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
-import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +34,11 @@ public class UserController {
     @PutMapping
     public User updateUser(@RequestBody User user) {
         return userService.update(user);
+    }
+
+    @GetMapping("/{email}")
+    public User getUserByEmail(@PathVariable("email") String email) {
+        return userService.findUserByEmail(email);
     }
 
 }
