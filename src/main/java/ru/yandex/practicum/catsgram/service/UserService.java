@@ -43,4 +43,11 @@ public class UserService {
         }
         return user;
     }
+
+    public User findUserByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new InvalidEmailException("Не задан email пользователя");
+        }
+            return users.get(email);
+    }
 }
