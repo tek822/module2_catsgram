@@ -22,9 +22,23 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<Post> findAll() {
-        List<Post> posts = postService.findAll();
-        log.debug("Текущее количество постов: {}", posts.size());
+    public List<Post> findAll(
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "desc") String sort
+    ){
+        if (!("desc".equals(sort) || "asc".equals(sort))) {
+            throw new IllegalArgumentException("Неизвестный порядок сортировки: " + sort);
+        }
+        if (page < 0) {
+            throw new IllegalArgumentException("Ошибка в параметре from: " + page);
+        }
+        if (size <= 0) {
+            throw new IllegalArgumentException("Ошибка в параметре size: " + size);
+        }
+
+        List<Post> posts = postService.findAll(size, page * size, sort);
+        log.debug("Выбрано posts: {}", posts.size());
         return posts;
     }
 
