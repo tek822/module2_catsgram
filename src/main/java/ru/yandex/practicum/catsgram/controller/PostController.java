@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.catsgram.exception.IncorrectParameterException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
@@ -31,10 +32,10 @@ public class PostController {
             throw new IllegalArgumentException("Неизвестный порядок сортировки: " + sort);
         }
         if (page < 0) {
-            throw new IllegalArgumentException("Ошибка в параметре from: " + page);
+            throw new IncorrectParameterException("page");
         }
         if (size <= 0) {
-            throw new IllegalArgumentException("Ошибка в параметре size: " + size);
+            throw new IncorrectParameterException("size");
         }
 
         List<Post> posts = postService.findAll(size, page * size, sort);
